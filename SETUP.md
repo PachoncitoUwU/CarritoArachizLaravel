@@ -11,6 +11,7 @@ Antes de empezar, asegúrate de tener instalado lo siguiente:
 - **PHP 8.2 o superior** → https://www.php.net/downloads
 - **Composer** → https://getcomposer.org/download/
 - **Node.js 18 o superior** (incluye npm) → https://nodejs.org/
+- **MySQL 8 o superior** → https://dev.mysql.com/downloads/mysql/ (o usa XAMPP/Laragon)
 - **Git** → https://git-scm.com/downloads
 
 Para verificar que todo está instalado, abre una terminal y ejecuta:
@@ -67,26 +68,26 @@ Esto rellena el valor `APP_KEY` en tu `.env`, necesario para encriptar sesiones 
 
 ---
 
-## Paso 5 — Base de datos (SQLite, no necesitas instalar nada)
+## Paso 5 — Configurar la base de datos (MySQL)
 
-Este proyecto usa **SQLite**, así que no necesitas MySQL ni ningún servidor de base de datos externo. Solo crea el archivo de base de datos:
+Asegúrate de tener MySQL corriendo y crea una base de datos vacía:
 
-```bash
-# Windows (CMD)
-type nul > database\database.sqlite
-
-# Windows (PowerShell)
-New-Item -ItemType File database\database.sqlite
-
-# Mac/Linux
-touch database/database.sqlite
+```sql
+CREATE DATABASE nombre_de_tu_bd;
 ```
 
-Luego verifica que en tu `.env` la conexión esté configurada así (ya viene por defecto):
+Luego edita tu `.env` y configura la conexión:
 
 ```env
-DB_CONNECTION=sqlite
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nombre_de_tu_bd
+DB_USERNAME=root
+DB_PASSWORD=tu_contraseña
 ```
+
+> Si usas XAMPP o Laragon, el usuario suele ser `root` y la contraseña está vacía por defecto.
 
 ---
 
@@ -160,7 +161,7 @@ git push -u origin main
 composer install
 copy .env.example .env
 php artisan key:generate
-type nul > database\database.sqlite
+# Edita el .env con tus credenciales de MySQL
 php artisan migrate --seed
 npm install
 npm run build
